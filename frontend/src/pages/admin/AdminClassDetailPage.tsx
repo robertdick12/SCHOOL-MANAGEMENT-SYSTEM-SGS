@@ -80,7 +80,7 @@ export function AdminClassDetailPage() {
             )}
 
             <div className="space-y-2 border-t border-slate-100 pt-4 dark:border-slate-800">
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                 <Select value={subjectId} onChange={(e) => setSubjectId(e.target.value)}>
                   <option value="">Subject…</option>
                   {subjects?.map((s) => (

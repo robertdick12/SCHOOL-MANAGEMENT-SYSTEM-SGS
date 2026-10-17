@@ -95,10 +95,10 @@ export function AppShell() {
             <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{ROLE_LABEL[activeRole]} portal</p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3">
             {user.roles.length > 1 && (
               <select
-                className="focus-ring rounded-md border border-slate-300 py-1.5 pl-2 pr-8 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                className="focus-ring w-20 rounded-md border border-slate-300 py-1.5 pl-2 pr-6 text-xs text-slate-700 sm:w-auto sm:pr-8 sm:text-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
                 value={activeRole}
                 onChange={(event) => navigate(ROLE_HOME[event.target.value as Role])}
                 aria-label="Switch portal"
@@ -114,20 +114,23 @@ export function AppShell() {
             <ThemeToggle />
 
             <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-700 dark:bg-brand-500/20 dark:text-brand-300">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-700 dark:bg-brand-500/20 dark:text-brand-300">
                 {initials(user.name)}
               </span>
               <span className="hidden text-sm font-medium text-slate-700 sm:inline dark:text-slate-300">{user.name}</span>
             </div>
 
             <Button variant="ghost" size="sm" onClick={() => logout()}>
-              Log out
+              <span className="sm:hidden">Exit</span>
+              <span className="hidden sm:inline">Log out</span>
             </Button>
           </div>
         </header>
 
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
-          <Outlet />
+          <div className="mx-auto max-w-7xl">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

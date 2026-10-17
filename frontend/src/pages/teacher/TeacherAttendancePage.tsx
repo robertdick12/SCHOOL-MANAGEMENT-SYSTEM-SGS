@@ -72,7 +72,7 @@ export function TeacherAttendancePage() {
         <PageSpinner />
       ) : (
         <div className="space-y-4">
-          <div className="overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800">
+          <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800">
             <table className="min-w-full divide-y divide-slate-200 text-sm dark:divide-slate-800">
               <thead className="bg-slate-50 dark:bg-slate-800/60">
                 <tr>
