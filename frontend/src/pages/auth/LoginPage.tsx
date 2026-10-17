@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '@/auth/AuthContext'
 import { Button } from '@/components/ui/Button'
-import { FormField, Input } from '@/components/ui/Input'
+import { FormField, Input, PasswordInput } from '@/components/ui/Input'
 import { extractErrorMessage } from '@/api/client'
 import { ROLE_HOME } from '@/components/layout/nav-config'
 
@@ -53,7 +53,7 @@ export function LoginPage() {
             </FormField>
 
             <FormField label="Password" htmlFor="password" error={errors.password?.message}>
-              <Input id="password" type="password" autoComplete="current-password" {...register('password')} />
+              <PasswordInput id="password" autoComplete="current-password" {...register('password')} />
             </FormField>
 
             {serverError && (
