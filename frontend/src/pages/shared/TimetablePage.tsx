@@ -30,19 +30,19 @@ export function TimetablePage() {
 
             return (
               <div key={label}>
-                <h3 className="mb-2 text-sm font-semibold text-slate-700">{label}</h3>
+                <h3 className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">{label}</h3>
                 <Card>
-                  <ul className="divide-y divide-slate-100">
+                  <ul className="divide-y divide-slate-100 dark:divide-slate-800">
                     {entries.map((entry) => (
                       <li key={entry.id} className="flex items-center justify-between px-4 py-3 text-sm">
                         <div>
-                          <p className="font-medium text-slate-900">{entry.subject?.name}</p>
-                          <p className="text-slate-500">
+                          <p className="font-medium text-slate-900 dark:text-slate-100">{entry.subject?.name}</p>
+                          <p className="text-slate-500 dark:text-slate-400">
                             {entry.school_class?.name} · {entry.teacher?.user?.name}
                             {entry.room ? ` · Room ${entry.room}` : ''}
                           </p>
                         </div>
-                        <span className="text-slate-500">
+                        <span className="text-slate-500 dark:text-slate-400">
                           {entry.start_time} – {entry.end_time}
                         </span>
                       </li>

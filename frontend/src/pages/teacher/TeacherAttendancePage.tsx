@@ -62,7 +62,7 @@ export function TeacherAttendancePage() {
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+          className="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
         />
       </div>
 
@@ -72,21 +72,21 @@ export function TeacherAttendancePage() {
         <PageSpinner />
       ) : (
         <div className="space-y-4">
-          <div className="overflow-hidden rounded-lg border border-slate-200">
-            <table className="min-w-full divide-y divide-slate-200 text-sm">
-              <thead className="bg-slate-50">
+          <div className="overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800">
+            <table className="min-w-full divide-y divide-slate-200 text-sm dark:divide-slate-800">
+              <thead className="bg-slate-50 dark:bg-slate-800/60">
                 <tr>
-                  <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase text-slate-500">Student</th>
-                  <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase text-slate-500">Status</th>
+                  <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase text-slate-500 dark:text-slate-400">Student</th>
+                  <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase text-slate-500 dark:text-slate-400">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 bg-white">
+              <tbody className="divide-y divide-slate-100 bg-white dark:divide-slate-800 dark:bg-slate-900">
                 {roster?.roster.map((row) => {
                   const current = draft[row.student_id] ?? row.status ?? 'present'
                   return (
                     <tr key={row.student_id}>
-                      <td className="px-4 py-2.5">
-                        {row.name} <span className="text-slate-400">({row.admission_number})</span>
+                      <td className="px-4 py-2.5 dark:text-slate-100">
+                        {row.name} <span className="text-slate-400 dark:text-slate-500">({row.admission_number})</span>
                       </td>
                       <td className="px-4 py-2.5">
                         <div className="flex gap-1">
@@ -99,7 +99,7 @@ export function TeacherAttendancePage() {
                                 'focus-ring rounded-md px-2.5 py-1 text-xs font-medium capitalize',
                                 current === status
                                   ? 'bg-brand-600 text-white'
-                                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200',
+                                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700',
                               )}
                             >
                               {status}
@@ -114,8 +114,8 @@ export function TeacherAttendancePage() {
             </table>
           </div>
 
-          {message && <p className="text-sm text-emerald-700">{message}</p>}
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {message && <p className="text-sm text-emerald-700 dark:text-emerald-400">{message}</p>}
+          {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
           <Button
             isLoading={submitMutation.isPending}

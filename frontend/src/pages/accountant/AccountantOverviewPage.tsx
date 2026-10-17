@@ -34,14 +34,14 @@ export function AccountantOverviewPage() {
             {data.recent_payments.length === 0 ? (
               <EmptyState title="No payments recorded yet" />
             ) : (
-              <ul className="divide-y divide-slate-100">
+              <ul className="divide-y divide-slate-100 dark:divide-slate-800">
                 {data.recent_payments.map((p) => (
                   <li key={p.id} className="flex items-center justify-between px-5 py-3 text-sm">
                     <span>
                       {p.student.first_name} {p.student.last_name}
                     </span>
-                    <span className="flex gap-3 text-slate-500">
-                      <span className="font-medium text-slate-900">{formatCurrency(p.amount_pesewas)}</span>
+                    <span className="flex gap-3 text-slate-500 dark:text-slate-400">
+                      <span className="font-medium text-slate-900 dark:text-slate-100">{formatCurrency(p.amount_pesewas)}</span>
                       {formatDateTime(p.paid_at)}
                     </span>
                   </li>

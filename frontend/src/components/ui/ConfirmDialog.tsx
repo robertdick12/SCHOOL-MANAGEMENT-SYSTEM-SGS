@@ -35,11 +35,11 @@ export function ConfirmDialog({
     <dialog
       ref={ref}
       onCancel={onCancel}
-      className="w-full max-w-sm rounded-lg border border-slate-200 p-0 shadow-lg backdrop:bg-slate-900/40"
+      className="w-full max-w-sm rounded-lg border border-slate-200 bg-white p-0 text-slate-900 shadow-lg backdrop:bg-slate-900/40 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100"
     >
       <div className="p-5">
-        <h2 className="text-base font-semibold text-slate-900">{title}</h2>
-        {description && <p className="mt-2 text-sm text-slate-600">{description}</p>}
+        <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{title}</h2>
+        {description && <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{description}</p>}
         <div className="mt-5 flex justify-end gap-3">
           <Button variant="secondary" onClick={onCancel} disabled={isLoading}>
             Cancel

@@ -34,13 +34,13 @@ export function TeacherOverviewPage() {
             {data.todays_lessons.length === 0 ? (
               <EmptyState title="No lessons scheduled for today" />
             ) : (
-              <ul className="divide-y divide-slate-100">
+              <ul className="divide-y divide-slate-100 dark:divide-slate-800">
                 {data.todays_lessons.map((lesson) => (
                   <li key={lesson.id} className="flex items-center justify-between px-5 py-3 text-sm">
                     <span>
                       {lesson.subject.name} — {lesson.school_class.name}
                     </span>
-                    <span className="text-slate-500">
+                    <span className="text-slate-500 dark:text-slate-400">
                       {lesson.start_time} – {lesson.end_time}
                     </span>
                   </li>

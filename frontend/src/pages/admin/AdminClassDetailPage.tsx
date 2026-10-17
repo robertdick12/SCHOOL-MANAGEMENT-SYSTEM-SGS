@@ -63,7 +63,7 @@ export function AdminClassDetailPage() {
           <CardHeader title="Subject teachers" description="Who teaches what in this class" />
           <CardBody className="space-y-4">
             {assignments && assignments.length > 0 ? (
-              <ul className="divide-y divide-slate-100">
+              <ul className="divide-y divide-slate-100 dark:divide-slate-800">
                 {assignments.map((a) => (
                   <li key={a.id} className="flex items-center justify-between py-2 text-sm">
                     <span>
@@ -76,10 +76,10 @@ export function AdminClassDetailPage() {
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-slate-500">No subject teachers assigned yet.</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">No subject teachers assigned yet.</p>
             )}
 
-            <div className="space-y-2 border-t border-slate-100 pt-4">
+            <div className="space-y-2 border-t border-slate-100 pt-4 dark:border-slate-800">
               <div className="grid grid-cols-3 gap-2">
                 <Select value={subjectId} onChange={(e) => setSubjectId(e.target.value)}>
                   <option value="">Subject…</option>
@@ -106,7 +106,7 @@ export function AdminClassDetailPage() {
                   ))}
                 </Select>
               </div>
-              {error && <p className="text-sm text-red-600">{error}</p>}
+              {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
               <Button
                 size="sm"
                 isLoading={assignMutation.isPending}
@@ -130,10 +130,10 @@ export function AdminClassDetailPage() {
           <CardHeader title="Students" description={`${students?.data.length ?? 0} enrolled`} />
           <CardBody>
             {students && students.data.length > 0 ? (
-              <ul className="divide-y divide-slate-100 text-sm">
+              <ul className="divide-y divide-slate-100 text-sm dark:divide-slate-800">
                 {students.data.map((s) => (
                   <li key={s.id} className="py-2">
-                    {s.first_name} {s.last_name} <span className="text-slate-400">({s.admission_number})</span>
+                    {s.first_name} {s.last_name} <span className="text-slate-400 dark:text-slate-500">({s.admission_number})</span>
                   </li>
                 ))}
               </ul>

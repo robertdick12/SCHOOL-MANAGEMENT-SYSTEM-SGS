@@ -26,11 +26,11 @@ export function ParentOverviewPage() {
             <Link key={child.student_id} to={`/parent/children/${child.student_id}`}>
               <Card className="h-full transition-shadow hover:shadow-md">
                 <CardBody>
-                  <p className="font-semibold text-slate-900">{child.name}</p>
-                  <p className="text-sm text-slate-500">{child.class ?? 'Not enrolled'}</p>
+                  <p className="font-semibold text-slate-900 dark:text-slate-100">{child.name}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">{child.class ?? 'Not enrolled'}</p>
                   <div className="mt-3 flex items-center justify-between text-sm">
-                    <span className="text-slate-500">Outstanding balance</span>
-                    <span className={child.outstanding_balance_pesewas > 0 ? 'font-medium text-amber-700' : 'font-medium text-emerald-700'}>
+                    <span className="text-slate-500 dark:text-slate-400">Outstanding balance</span>
+                    <span className={child.outstanding_balance_pesewas > 0 ? 'font-medium text-amber-700 dark:text-amber-400' : 'font-medium text-emerald-700 dark:text-emerald-400'}>
                       {formatCurrency(child.outstanding_balance_pesewas)}
                     </span>
                   </div>

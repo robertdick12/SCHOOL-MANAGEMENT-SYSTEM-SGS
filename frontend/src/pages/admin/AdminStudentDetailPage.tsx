@@ -56,23 +56,23 @@ export function AdminStudentDetailPage() {
           <CardHeader title="Profile" />
           <CardBody className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-slate-500">Status</span>
+              <span className="text-slate-500 dark:text-slate-400">Status</span>
               <Badge tone={student.status === 'active' ? 'success' : 'neutral'}>{student.status}</Badge>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Gender</span>
+              <span className="text-slate-500 dark:text-slate-400">Gender</span>
               <span>{student.gender ?? '—'}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Date of birth</span>
+              <span className="text-slate-500 dark:text-slate-400">Date of birth</span>
               <span>{student.date_of_birth ? formatDate(student.date_of_birth) : '—'}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Admitted</span>
+              <span className="text-slate-500 dark:text-slate-400">Admitted</span>
               <span>{formatDate(student.admission_date)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Portal account</span>
+              <span className="text-slate-500 dark:text-slate-400">Portal account</span>
               <span>{student.user_id ? 'Active' : 'Not set up'}</span>
             </div>
           </CardBody>
@@ -82,7 +82,7 @@ export function AdminStudentDetailPage() {
           <CardHeader title="Class enrolment" />
           <CardBody className="space-y-3 text-sm">
             <div className="flex justify-between">
-              <span className="text-slate-500">Current class</span>
+              <span className="text-slate-500 dark:text-slate-400">Current class</span>
               <span className="font-medium">{currentEnrolment?.school_class?.name ?? 'Not enrolled'}</span>
             </div>
             <div className="flex items-end gap-2">
@@ -112,7 +112,7 @@ export function AdminStudentDetailPage() {
                 Enrol
               </Button>
             </div>
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
           </CardBody>
         </Card>
 
@@ -120,7 +120,7 @@ export function AdminStudentDetailPage() {
           <CardHeader title="Guardians" description="Linked via the Guardians page" />
           <CardBody>
             {student.guardians && student.guardians.length > 0 ? (
-              <ul className="divide-y divide-slate-100">
+              <ul className="divide-y divide-slate-100 dark:divide-slate-800">
                 {student.guardians.map((g) => (
                   <li key={g.id} className="flex items-center justify-between py-2 text-sm">
                     <span>
@@ -130,7 +130,7 @@ export function AdminStudentDetailPage() {
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-slate-500">No guardians linked yet. Link one from the Guardians page.</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">No guardians linked yet. Link one from the Guardians page.</p>
             )}
           </CardBody>
         </Card>

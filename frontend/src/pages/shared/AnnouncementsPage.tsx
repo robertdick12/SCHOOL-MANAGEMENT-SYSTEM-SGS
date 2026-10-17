@@ -57,11 +57,11 @@ export function AnnouncementsPage() {
             <Card key={a.id}>
               <CardBody>
                 <div className="mb-1 flex items-center justify-between">
-                  <h3 className="font-semibold text-slate-900">{a.title}</h3>
+                  <h3 className="font-semibold text-slate-900 dark:text-slate-100">{a.title}</h3>
                   {!a.published_at && <Badge tone="neutral">Draft</Badge>}
                 </div>
-                <p className="whitespace-pre-wrap text-sm text-slate-600">{a.body}</p>
-                <p className="mt-2 text-xs text-slate-400">
+                <p className="whitespace-pre-wrap text-sm text-slate-600 dark:text-slate-400">{a.body}</p>
+                <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
                   {a.audience === 'all' ? 'Everyone' : a.audience} · {a.published_at ? formatDateTime(a.published_at) : 'Not published'}
                 </p>
               </CardBody>
@@ -79,7 +79,7 @@ export function AnnouncementsPage() {
             <textarea
               id="ann_body"
               rows={4}
-              className="block w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus-ring"
+              className="block w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus-ring dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
               value={form.body}
               onChange={(e) => setForm({ ...form, body: e.target.value })}
             />
@@ -93,12 +93,12 @@ export function AnnouncementsPage() {
               <option value="accountant">Accountants</option>
             </Select>
           </FormField>
-          <label className="flex items-center gap-2 text-sm text-slate-700">
+          <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
             <input type="checkbox" checked={form.publish} onChange={(e) => setForm({ ...form, publish: e.target.checked })} />
             Publish immediately
           </label>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
           <div className="flex justify-end gap-3 pt-2">
             <Button type="button" variant="secondary" onClick={() => setOpen(false)}>
               Cancel

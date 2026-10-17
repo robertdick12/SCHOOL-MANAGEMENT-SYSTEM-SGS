@@ -67,9 +67,9 @@ export function AdminTeachersPage() {
       />
 
       {createdCredential && (
-        <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+        <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300">
           Account created for <strong>{createdCredential.email}</strong>. Temporary password:{' '}
-          <code className="rounded bg-amber-100 px-1.5 py-0.5">{createdCredential.password}</code>. Share this
+          <code className="rounded bg-amber-100 px-1.5 py-0.5 dark:bg-amber-500/20">{createdCredential.password}</code>. Share this
           securely — it will not be shown again.
         </div>
       )}
@@ -106,7 +106,7 @@ export function AdminTeachersPage() {
             <Input id="hire_date" type="date" {...register('hire_date')} />
           </FormField>
 
-          {serverError && <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{serverError}</p>}
+          {serverError && <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-500/10 dark:text-red-400">{serverError}</p>}
 
           <div className="flex justify-end gap-3 pt-2">
             <Button type="button" variant="secondary" onClick={() => setOpen(false)}>

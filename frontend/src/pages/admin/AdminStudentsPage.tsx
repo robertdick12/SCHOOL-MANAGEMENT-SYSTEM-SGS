@@ -128,7 +128,7 @@ export function AdminStudentsPage() {
             <Input id="admission_date" type="date" {...register('admission_date')} />
           </FormField>
 
-          {serverError && <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{serverError}</p>}
+          {serverError && <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-500/10 dark:text-red-400">{serverError}</p>}
 
           <div className="flex justify-end gap-3 pt-2">
             <Button type="button" variant="secondary" onClick={() => setOpen(false)}>

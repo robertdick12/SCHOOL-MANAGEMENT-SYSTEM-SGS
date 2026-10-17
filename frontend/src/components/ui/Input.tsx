@@ -2,7 +2,7 @@ import { forwardRef, useState, type InputHTMLAttributes, type SelectHTMLAttribut
 import { cn } from '@/lib/utils'
 
 const fieldClasses =
-  'block w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus-ring disabled:bg-slate-50 disabled:text-slate-400'
+  'block w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus-ring disabled:bg-slate-50 disabled:text-slate-400 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 dark:disabled:bg-slate-800 dark:disabled:text-slate-500'
 
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
   ({ className, ...props }, ref) => <input ref={ref} className={cn(fieldClasses, className)} {...props} />,
@@ -45,7 +45,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HT
           tabIndex={-1}
           aria-label={visible ? 'Hide password' : 'Show password'}
           aria-pressed={visible}
-          className="absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 hover:text-slate-600 focus-ring rounded-md"
+          className="absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 hover:text-slate-600 focus-ring rounded-md dark:text-slate-500 dark:hover:text-slate-300"
         >
           {visible ? <EyeOffIcon /> : <EyeIcon />}
         </button>
@@ -66,7 +66,7 @@ Select.displayName = 'Select'
 
 export function Label({ children, htmlFor }: { children: ReactNode; htmlFor?: string }) {
   return (
-    <label htmlFor={htmlFor} className="mb-1 block text-sm font-medium text-slate-700">
+    <label htmlFor={htmlFor} className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
       {children}
     </label>
   )
@@ -74,7 +74,7 @@ export function Label({ children, htmlFor }: { children: ReactNode; htmlFor?: st
 
 export function FieldError({ message }: { message?: string }) {
   if (!message) return null
-  return <p className="mt-1 text-sm text-red-600">{message}</p>
+  return <p className="mt-1 text-sm text-red-600 dark:text-red-400">{message}</p>
 }
 
 export function FormField({

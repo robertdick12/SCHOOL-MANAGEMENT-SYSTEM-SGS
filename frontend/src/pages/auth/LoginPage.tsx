@@ -6,6 +6,7 @@ import { Navigate } from 'react-router-dom'
 import { useAuth } from '@/auth/AuthContext'
 import { Button } from '@/components/ui/Button'
 import { FormField, Input, PasswordInput } from '@/components/ui/Input'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { extractErrorMessage } from '@/api/client'
 import { ROLE_HOME } from '@/components/layout/nav-config'
 
@@ -39,14 +40,18 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 dark:bg-slate-950">
       <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <h1 className="text-xl font-semibold text-slate-900">Ghana Int&apos;l Academy</h1>
-          <p className="mt-1 text-sm text-slate-500">Sign in to the school management system</p>
+        <div className="mb-4 flex justify-end">
+          <ThemeToggle />
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="mb-8 text-center">
+          <h1 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Ghana Int&apos;l Academy</h1>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Sign in to the school management system</p>
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <div className="space-y-4">
             <FormField label="Email address" htmlFor="email" error={errors.email?.message}>
               <Input id="email" type="email" autoComplete="username" {...register('email')} />
@@ -57,7 +62,7 @@ export function LoginPage() {
             </FormField>
 
             {serverError && (
-              <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+              <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-500/10 dark:text-red-400">
                 {serverError}
               </p>
             )}

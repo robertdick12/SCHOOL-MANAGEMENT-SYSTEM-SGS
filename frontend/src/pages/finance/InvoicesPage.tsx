@@ -92,7 +92,7 @@ export function InvoicesPage() {
               </option>
             ))}
           </Select>
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
           <div className="flex justify-end gap-3 pt-2">
             <Button type="button" variant="secondary" onClick={() => setOpen(false)}>
               Cancel
@@ -118,7 +118,7 @@ export function InvoicesPage() {
       <Modal open={viewing !== null} title={`Invoice ${viewing?.invoice_number ?? ''}`} onClose={() => setViewing(null)}>
         {viewing && (
           <div className="space-y-3 text-sm">
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-slate-100 dark:divide-slate-800">
               {viewing.items?.map((item) => (
                 <li key={item.id} className="flex justify-between py-2">
                   <span>{item.description}</span>
@@ -126,11 +126,11 @@ export function InvoicesPage() {
                 </li>
               ))}
             </ul>
-            <div className="flex justify-between border-t border-slate-200 pt-2 font-medium">
+            <div className="flex justify-between border-t border-slate-200 pt-2 font-medium dark:border-slate-800">
               <span>Total</span>
               <span>{formatCurrency(viewing.total_amount_pesewas)}</span>
             </div>
-            <div className="flex justify-between text-emerald-700">
+            <div className="flex justify-between text-emerald-700 dark:text-emerald-400">
               <span>Paid</span>
               <span>{formatCurrency(viewing.amount_paid_pesewas)}</span>
             </div>

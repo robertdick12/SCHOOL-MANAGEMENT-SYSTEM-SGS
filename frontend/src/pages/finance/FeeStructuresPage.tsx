@@ -128,7 +128,7 @@ export function FeeStructuresPage() {
             <Input id="fs_description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           </FormField>
 
-          {error && <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+          {error && <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-500/10 dark:text-red-400">{error}</p>}
 
           <div className="flex justify-end gap-3 pt-2">
             <Button type="button" variant="secondary" onClick={() => setOpen(false)}>

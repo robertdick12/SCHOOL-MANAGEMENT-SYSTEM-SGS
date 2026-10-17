@@ -53,11 +53,11 @@ export function AdminAcademicsPage() {
         <Card>
           <CardHeader title="Academic years" />
           <CardBody className="space-y-4">
-            <ul className="divide-y divide-slate-100 text-sm">
+            <ul className="divide-y divide-slate-100 text-sm dark:divide-slate-800">
               {years?.map((y) => (
                 <li key={y.id} className="flex items-center justify-between py-2">
                   <span>
-                    {y.name} <span className="text-slate-400">({formatDate(y.start_date)} – {formatDate(y.end_date)})</span>
+                    {y.name} <span className="text-slate-400 dark:text-slate-500">({formatDate(y.start_date)} – {formatDate(y.end_date)})</span>
                   </span>
                   {y.is_current ? (
                     <Badge tone="success">Current</Badge>
@@ -69,13 +69,13 @@ export function AdminAcademicsPage() {
                 </li>
               ))}
             </ul>
-            <div className="space-y-2 border-t border-slate-100 pt-4">
+            <div className="space-y-2 border-t border-slate-100 pt-4 dark:border-slate-800">
               <Input placeholder="Name e.g. 2026/2027" value={yearForm.name} onChange={(e) => setYearForm({ ...yearForm, name: e.target.value })} />
               <div className="grid grid-cols-2 gap-2">
                 <Input type="date" value={yearForm.start_date} onChange={(e) => setYearForm({ ...yearForm, start_date: e.target.value })} />
                 <Input type="date" value={yearForm.end_date} onChange={(e) => setYearForm({ ...yearForm, end_date: e.target.value })} />
               </div>
-              {error && <p className="text-sm text-red-600">{error}</p>}
+              {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
               <Button
                 size="sm"
                 isLoading={createYear.isPending}
@@ -97,11 +97,11 @@ export function AdminAcademicsPage() {
         <Card>
           <CardHeader title="Academic terms" />
           <CardBody className="space-y-4">
-            <ul className="divide-y divide-slate-100 text-sm">
+            <ul className="divide-y divide-slate-100 text-sm dark:divide-slate-800">
               {terms?.map((t) => (
                 <li key={t.id} className="flex items-center justify-between py-2">
                   <span>
-                    {t.name} <span className="text-slate-400">({t.academic_year?.name})</span>
+                    {t.name} <span className="text-slate-400 dark:text-slate-500">({t.academic_year?.name})</span>
                   </span>
                   {t.is_current ? (
                     <Badge tone="success">Current</Badge>
@@ -113,7 +113,7 @@ export function AdminAcademicsPage() {
                 </li>
               ))}
             </ul>
-            <div className="space-y-2 border-t border-slate-100 pt-4">
+            <div className="space-y-2 border-t border-slate-100 pt-4 dark:border-slate-800">
               <Select value={termForm.academic_year_id} onChange={(e) => setTermForm({ ...termForm, academic_year_id: e.target.value })}>
                 <option value="">Academic year…</option>
                 {years?.map((y) => (
