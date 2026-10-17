@@ -47,7 +47,7 @@ export function LoginPage() {
         </div>
 
         <div className="mb-8 text-center">
-          <h1 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Ghana Int&apos;l Academy</h1>
+          <h1 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Sovereign Grace School</h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Sign in to the school management system</p>
         </div>
 

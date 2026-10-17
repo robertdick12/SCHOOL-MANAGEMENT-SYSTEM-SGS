@@ -1,8 +1,13 @@
 # School Management System (SMS)
 
-A school management platform for a private school in Ghana: administrators,
+A school management platform for Sovereign Grace School (Ghana): administrators,
 teachers, students, parents/guardians, and accountants each get a
 role-specific portal backed by one documented, versioned REST API.
+
+Built for a single school. Not a multi-tenant/SaaS product — every account
+belongs to this one school, with no sign-up flow or per-school data
+isolation. A separate multi-tenant build is a possible future project, not
+a mode this codebase switches into.
 
 **Read [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) for the detailed,
 honest build log and scope decisions.** This file is the practical

@@ -10,6 +10,18 @@ the brief's own fallback priority list (its "Execution Rules" item 16) and
 builds a genuinely working, secure, tested MVP on that subset. Everything
 deferred is listed explicitly at the bottom, not hidden.
 
+**Single-school, not multi-tenant (2026-10-17 decision):** a multi-tenant
+version (schools sign up, pay, get approved by a platform owner, with full
+per-school data isolation) was built and verified working, then explicitly
+reverted at the owner's request — see commit `33acb7c`. The owner's actual
+need right now is one school, Sovereign Grace School; multi-tenancy adds
+real complexity (a schools table, approval gating, and eventually full
+per-resource data isolation across ~18 policy files) that isn't worth
+carrying for a single customer. If multi-tenancy is wanted later, the
+reverted commit (`7fc61a7`) is a working starting point to cherry-pick from,
+but the stated plan is a separate build for that case, not toggling this
+one. Do not reintroduce schools/platform_admin without being asked again.
+
 ## Stack (as specified)
 
 - Backend: PHP 8.3, Laravel (latest stable), Sanctum, PostgreSQL
