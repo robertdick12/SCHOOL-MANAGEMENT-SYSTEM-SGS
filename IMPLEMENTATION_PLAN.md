@@ -110,8 +110,57 @@ separate ticket system.
       Accountant has fee/invoice/payment management)
 - [x] Frontend build (type-check + production build) passes, 0 errors
 - [x] Backend Pest test suite passes (43/43)
-- [ ] README, .env.example, deployment docs finalized
-- [ ] Final honest status report (implemented/tested/partial/not done)
+- [x] README, .env.example, deployment docs finalized
+- [x] Final honest status report (implemented/tested/partial/not done)
 
 This file is the single source of truth for progress — update checkboxes
 in place rather than creating new status documents.
+
+## Final status report (2026-10-17)
+
+Verified by re-running everything below against the live local dev
+database and a clean build, not just reading code:
+
+**Implemented and tested:**
+- Roles seeded and verified in the database (`admin`, `teacher`,
+  `student`, `parent`, `accountant` all present via
+  `Role::all()->pluck('name')`). Authorization in this codebase is
+  role-based (`hasRole()` in all 18 policy classes under
+  `backend/app/Policies/`), not granular-permission-based, so seeding
+  roles is the complete requirement — there is no separate permissions
+  table to populate.
+- All 27 migrations applied cleanly (`php artisan migrate:status`: all
+  `Ran`), including the Sanctum personal-access-tokens and
+  spatie/laravel-permission tables added on 2026-10-17.
+- Dev seed data present and verified in the database: 5 role accounts
+  plus one class, two subjects, one student enrolment, one
+  guardian-student link — all queried live via `tinker`, not assumed.
+- Backend Pest suite: 43/43 passing, 76 assertions, re-run clean
+  (`php artisan test`).
+- Frontend build: `tsc -b && vite build` — 0 type errors, 0 build
+  errors, re-run clean.
+- README.md and `backend/.env.example` were already complete and
+  committed in the initial commit (setup, deployment, API conventions,
+  known limitations) — confirmed by reading both in full rather than
+  trusting the earlier unchecked checklist state.
+
+**Partial (documented, not hidden):**
+- Paystack gateway: interface + signature verification implemented,
+  no HTTP endpoint wired up, never tested against a real account (no
+  credentials available). Manual payment recording is the only tested
+  payment path.
+- A handful of `FormRequest`-validated endpoints run validation before
+  the authorization check (422 instead of 403 for unauthorized+invalid
+  requests — the write is still correctly blocked either way).
+
+**Not done (deferred at MVP scope, per the brief's own fallback
+priority list — see "Explicitly deferred" above):**
+- Transportation management, live SMS/WhatsApp/email notification
+  delivery, CSV import/export, Flutter app, password reset flow,
+  frontend automated tests (no Vitest/RTL — manual E2E only), timetable
+  draft/publish state.
+
+No feature in this report is marked done without either a passing
+automated test or a live, reproducible check performed just now
+(migration status, DB role/seed query, test run, build run) — not a
+re-statement of what an earlier session believed was true.
