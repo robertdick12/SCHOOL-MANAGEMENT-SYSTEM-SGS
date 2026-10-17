@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AnnouncementRequest;
 use App\Models\Announcement;
+use App\Models\User;
+use App\Notifications\AnnouncementPublished;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class AnnouncementController extends Controller
 {
@@ -54,7 +57,32 @@ class AnnouncementController extends Controller
 
         $announcement = Announcement::create([...$request->validated(), 'created_by' => $request->user()->id]);
 
+        if ($announcement->isPublished()) {
+            $this->notifyAudience($announcement);
+        }
+
         return response()->json($announcement, 201);
+    }
+
+    /**
+     * Role-based only — doesn't narrow by the announcement's optional
+     * school_class_id, unlike the in-app list in index(). A known
+     * simplification: the emailed "heads up" is slightly broader than who
+     * ends up seeing it scoped correctly in the app itself.
+     */
+    private function notifyAudience(Announcement $announcement): void
+    {
+        $query = User::query()->where('is_active', true)->where('id', '!=', $announcement->created_by);
+
+        if ($announcement->audience !== 'all') {
+            $query->role($announcement->audience);
+        }
+
+        $recipients = $query->get();
+
+        if ($recipients->isNotEmpty()) {
+            Notification::send($recipients, new AnnouncementPublished($announcement));
+        }
     }
 
     public function show(Announcement $announcement): JsonResponse

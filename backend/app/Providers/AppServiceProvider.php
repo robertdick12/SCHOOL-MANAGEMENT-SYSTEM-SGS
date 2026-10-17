@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Services\Messaging\SmsGatewayInterface;
+use App\Services\Messaging\UnconfiguredSmsGateway;
+use App\Services\Messaging\UnconfiguredWhatsAppGateway;
+use App\Services\Messaging\WhatsAppGatewayInterface;
 use App\Services\Payments\PaymentGatewayInterface;
 use App\Services\Payments\PaystackGateway;
 use Illuminate\Auth\Notifications\ResetPassword;
@@ -18,6 +22,11 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(PaymentGatewayInterface::class, PaystackGateway::class);
+
+        // Neither has a real provider account yet — see each class's doc
+        // comment. Swap these bindings once credentials exist.
+        $this->app->bind(SmsGatewayInterface::class, UnconfiguredSmsGateway::class);
+        $this->app->bind(WhatsAppGatewayInterface::class, UnconfiguredWhatsAppGateway::class);
     }
 
     /**
