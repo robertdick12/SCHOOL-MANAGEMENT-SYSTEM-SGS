@@ -106,12 +106,17 @@ php artisan test              # 43 Pest tests: auth, authorization boundaries, f
 
 ```bash
 cd frontend
+npm run test                  # Vitest + React Testing Library — 20 tests
 npm run build                 # tsc --strict type-check, then production build
 ```
 
-There is no automated frontend test runner configured (no Vitest/RTL) — see
-"Known limitations" below. The frontend was manually exercised against the
-live backend for the critical end-to-end workflow (see
+Frontend tests cover the pure utility functions (`lib/utils.ts`), the
+password-visibility toggle, the dark-mode theme toggle (including
+localStorage persistence), and the login form's validation and error
+states (mocking the API layer — no real network calls). This is
+intentionally not exhaustive coverage of every page; the rest of the
+frontend is type-checked and was manually exercised against the live
+backend for the critical end-to-end workflow (see
 `IMPLEMENTATION_PLAN.md`).
 
 ## API documentation
@@ -134,6 +139,22 @@ mobile is not yet implemented — see Known limitations):
 4. `GET /api/v1/me` — current user: `{ id, name, email, roles: string[],
    permissions: string[] }`.
 5. `POST /api/v1/logout`.
+6. `POST /api/v1/forgot-password` — body `{ email }`. Always returns the
+   same message regardless of whether the email exists, so it can't be
+   used to enumerate accounts. Rate-limited to 3/minute.
+7. `POST /api/v1/reset-password` — body `{ token, email, password }`, where
+   `token` comes from the link in the reset email.
+
+**CSV import/export (students)**: `GET /api/v1/students/export` streams a
+CSV of every student the caller can see (same scoping as the list
+endpoint). `POST /api/v1/students/import` accepts a `file` (multipart,
+`.csv`) with columns `admission_number, first_name, last_name,
+date_of_birth, gender, admission_date, status, class_name` — processes
+one row at a time, creates what it validly can, and returns
+`{ created: number, errors: [{ row, messages }] }` for the rest rather
+than failing the whole batch on one bad row. `class_name` is optional and
+only auto-enrols if it matches an existing class in the current academic
+year.
 
 **Authorization**: every protected endpoint is gated by a Laravel Policy
 (see `backend/app/Policies/`) checked server-side — the frontend's
@@ -212,13 +233,45 @@ $user->assignRole('admin');
 Change the password on first login (password-change-on-first-login is not
 yet built — see Known limitations).
 
+### Email setup
+
+Password reset and "announcement published" emails are real, working
+features — but `MAIL_MAILER=log` by default, which writes emails to
+`storage/logs/laravel.log` instead of actually sending them. To send real
+email (e.g. via Gmail SMTP with an app password — requires 2-Step
+Verification on the Google account, generated at
+myaccount.google.com/apppasswords):
+
+```
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=youraddress@gmail.com
+MAIL_PASSWORD=your-16-character-app-password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=youraddress@gmail.com
+```
+
+No code changes are needed — only these `.env` values.
+
+### SMS / WhatsApp
+
+Not implemented — no paid provider account exists (Twilio, Hubtel SMS, and
+Meta's WhatsApp Business API all require one). `SmsGatewayInterface` and
+`WhatsAppGatewayInterface` (`backend/app/Services/Messaging/`) exist as a
+ready-to-wire abstraction, bound to `Unconfigured*Gateway` implementations
+that throw if actually called — the same pattern as
+`PaymentGatewayInterface`/`PaystackGateway` for payments. Swap the binding
+in `AppServiceProvider` once a real provider account exists.
+
 ### Queue / scheduled tasks
 
-Not currently required — nothing in this MVP is queued or scheduled
-(notifications are in-app-only, no email/SMS sending is implemented). If
-you wire up the Paystack integration or notification delivery, you'll want
-`php artisan queue:work` running as a supervised process and the scheduler
-cron entry per Laravel's standard deployment docs.
+Not currently required — nothing in this MVP is queued; announcement and
+password-reset emails send synchronously on the request that triggers
+them. If you wire up the Paystack integration or a real SMS/WhatsApp
+provider, you'll want `php artisan queue:work` running as a supervised
+process and the scheduler cron entry per Laravel's standard deployment
+docs.
 
 ### Backup and restore
 
@@ -240,23 +293,27 @@ still worth keeping).
 See `IMPLEMENTATION_PLAN.md` for the full implemented/partial/not-done
 breakdown. Highlights:
 
-- **Password reset** is not implemented (no "forgot password" flow).
 - **Mobile Money / Paystack integration**: the gateway interface and
   signature verification are implemented (`PaystackGateway`), but there is
   no HTTP endpoint wiring it up yet, and it has never been tested against
   a real Paystack account (no credentials available in this environment).
-  Manual payment recording is the only working payment path.
+  Manual payment recording is the only working payment path — and that's
+  the deliberate choice for now, not just a gap (see "Email setup" /
+  "SMS / WhatsApp" above for what *is* real).
 - **Transportation management** (buses/routes) is not implemented.
-- **Email/SMS/WhatsApp notifications** are not implemented — only an
-  in-app `notifications` table exists, unused by any feature yet.
-- **CSV import/export** is not implemented anywhere.
+- **SMS/WhatsApp notifications** are not implemented — see "SMS / WhatsApp"
+  above. Email notifications (password reset, announcements) are real and
+  working, defaulting to a log-only mail driver until real SMTP
+  credentials are provided.
 - **Timetable publish/draft state**: unlike exams and assessments,
   timetable entries are always immediately visible once created (no
   draft state) — a deliberate scope cut, documented in
   `IMPLEMENTATION_PLAN.md`.
-- **No frontend automated tests** (no Vitest/RTL); the frontend is
-  type-checked (`tsc --strict`) and was manually exercised against the
-  live backend for the critical workflow, but not unit/component tested.
+- **Frontend automated tests exist but are not exhaustive** — 20 Vitest/RTL
+  tests cover utilities, the password toggle, dark mode, and the login
+  form; most pages are still only manually exercised and type-checked.
+- **CSV import/export exists for students only** — not for teachers,
+  guardians, invoices, or anything else.
 - A handful of `FormRequest`-validated endpoints run validation before the
   authorization check, so an unauthorized request with invalid data gets
   a 422 instead of a 403 (the action is still correctly blocked either

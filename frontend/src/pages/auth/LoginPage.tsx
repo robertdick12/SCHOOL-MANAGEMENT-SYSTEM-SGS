@@ -90,7 +90,7 @@ export function LoginPage() {
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Sign in to your school portal</p>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
             <FormField label="Email address" htmlFor="email" error={errors.email?.message}>
               <Input id="email" type="email" autoComplete="username" placeholder="you@school.com" {...register('email')} />
             </FormField>
