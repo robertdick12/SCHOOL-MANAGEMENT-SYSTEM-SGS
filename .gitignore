@@ -1,0 +1,15 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# Env files anywhere in the repo
+.env
+.env.*
+!.env.example
+
+# Dependency directories anywhere in the repo
+node_modules/
+vendor/
