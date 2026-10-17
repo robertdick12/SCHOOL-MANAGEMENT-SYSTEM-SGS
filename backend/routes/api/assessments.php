@@ -5,7 +5,7 @@ use App\Http\Controllers\Api\V1\AssessmentResultController;
 use App\Http\Controllers\Api\V1\AttendanceController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'school.active'])->group(function () {
     Route::apiResource('assessments', AssessmentController::class);
     Route::post('assessments/{assessment}/publish', [AssessmentController::class, 'publish']);
     Route::get('assessments/{assessment}/results', [AssessmentResultController::class, 'forAssessment']);

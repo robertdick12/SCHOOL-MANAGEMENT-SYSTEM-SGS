@@ -6,6 +6,8 @@ import { RequireAuth, RequireRole } from '@/auth/RouteGuards'
 import { AppShell } from '@/components/layout/AppShell'
 import { ROLE_HOME } from '@/components/layout/nav-config'
 import { LoginPage } from '@/pages/auth/LoginPage'
+import { RegisterSchoolPage } from '@/pages/auth/RegisterSchoolPage'
+import { PlatformSchoolsPage } from '@/pages/platform/PlatformSchoolsPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { UnauthorizedPage } from '@/pages/UnauthorizedPage'
 import { PageSpinner } from '@/components/ui/Spinner'
@@ -64,9 +66,16 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/register-school" element={<RegisterSchoolPage />} />
       <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
       <Route element={<RequireAuth />}>
+        <Route element={<RequireRole allow={['platform_admin']} />}>
+          <Route path="/platform" element={<AppShell />}>
+            <Route index element={<PlatformSchoolsPage />} />
+          </Route>
+        </Route>
+
         <Route element={<RequireRole allow={['admin']} />}>
           <Route path="/admin" element={<AppShell />}>
             <Route index element={<AdminOverviewPage />} />

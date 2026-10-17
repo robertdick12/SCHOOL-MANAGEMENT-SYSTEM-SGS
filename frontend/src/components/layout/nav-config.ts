@@ -7,6 +7,7 @@ export interface NavItem {
 }
 
 export const NAV_BY_ROLE: Record<Role, NavItem[]> = {
+  platform_admin: [{ label: 'Schools', to: '/platform', end: true }],
   admin: [
     { label: 'Overview', to: '/admin', end: true },
     { label: 'Students', to: '/admin/students' },
@@ -57,6 +58,7 @@ export const NAV_BY_ROLE: Record<Role, NavItem[]> = {
 }
 
 export const ROLE_LABEL: Record<Role, string> = {
+  platform_admin: 'Platform Owner',
   admin: 'Administrator',
   teacher: 'Teacher',
   student: 'Student',
@@ -65,6 +67,7 @@ export const ROLE_LABEL: Record<Role, string> = {
 }
 
 export const ROLE_HOME: Record<Role, string> = {
+  platform_admin: '/platform',
   admin: '/admin',
   teacher: '/teacher',
   student: '/student',

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\AcademicTerm;
 use App\Models\AcademicYear;
 use App\Models\Guardian;
+use App\Models\School;
 use App\Models\SchoolClass;
 use App\Models\Student;
 use App\Models\StudentEnrolment;
@@ -30,7 +31,44 @@ class DatabaseSeeder extends Seeder
 
         $devPassword = env('DEV_SEED_PASSWORD', 'Passw0rd!2026');
 
+        $platformOwner = User::factory()->create([
+            'name' => 'Platform Owner',
+            'email' => 'owner@platform.test',
+            'password' => Hash::make($devPassword),
+        ]);
+        $platformOwner->assignRole('platform_admin');
+
+        $school = School::create([
+            'name' => "Ghana Int'l Academy",
+            'slug' => 'ghana-intl-academy',
+            'contact_name' => 'Ama Owusu',
+            'contact_email' => 'admin@school.test',
+            'contact_phone' => '+233240000001',
+            'status' => School::STATUS_ACTIVE,
+            'approved_at' => now(),
+        ]);
+
+        // A second school stuck at "pending" so the approval flow can be
+        // exercised immediately: its admin exists but is locked out until a
+        // platform_admin approves it from the Platform Schools dashboard.
+        School::create([
+            'name' => 'Accra Demo School',
+            'slug' => 'accra-demo-school',
+            'contact_name' => 'Kwabena Owusu-Ansah',
+            'contact_email' => 'admin@accrademo.test',
+            'contact_phone' => '+233240000099',
+            'status' => School::STATUS_PENDING,
+        ]);
+        $pendingAdmin = User::factory()->create([
+            'school_id' => School::where('slug', 'accra-demo-school')->value('id'),
+            'name' => 'Kwabena Owusu-Ansah',
+            'email' => 'admin@accrademo.test',
+            'password' => Hash::make($devPassword),
+        ]);
+        $pendingAdmin->assignRole('admin');
+
         $admin = User::factory()->create([
+            'school_id' => $school->id,
             'name' => 'Ama Owusu',
             'email' => 'admin@school.test',
             'password' => Hash::make($devPassword),
@@ -38,6 +76,7 @@ class DatabaseSeeder extends Seeder
         $admin->assignRole('admin');
 
         $accountant = User::factory()->create([
+            'school_id' => $school->id,
             'name' => 'Kofi Asante',
             'email' => 'accountant@school.test',
             'password' => Hash::make($devPassword),
@@ -63,6 +102,7 @@ class DatabaseSeeder extends Seeder
         $english = Subject::create(['name' => 'English Language', 'code' => 'ENG']);
 
         $teacherUser = User::factory()->create([
+            'school_id' => $school->id,
             'name' => 'Kwame Mensah',
             'email' => 'teacher@school.test',
             'password' => Hash::make($devPassword),
@@ -92,6 +132,7 @@ class DatabaseSeeder extends Seeder
         }
 
         $studentUser = User::factory()->create([
+            'school_id' => $school->id,
             'name' => 'Abena Boateng',
             'email' => 'student@school.test',
             'password' => Hash::make($devPassword),
@@ -115,6 +156,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $guardianUser = User::factory()->create([
+            'school_id' => $school->id,
             'name' => 'Yaw Boateng',
             'email' => 'parent@school.test',
             'password' => Hash::make($devPassword),
@@ -134,12 +176,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->command?->info("Seeded dev accounts (password: {$devPassword}):");
-        $this->command?->table(['Role', 'Email'], [
-            ['admin', 'admin@school.test'],
-            ['teacher', 'teacher@school.test'],
-            ['student', 'student@school.test'],
-            ['parent', 'parent@school.test'],
-            ['accountant', 'accountant@school.test'],
+        $this->command?->table(['Role', 'Email', 'School', 'School status'], [
+            ['platform_admin', 'owner@platform.test', '—', '—'],
+            ['admin', 'admin@school.test', "Ghana Int'l Academy", 'active'],
+            ['teacher', 'teacher@school.test', "Ghana Int'l Academy", 'active'],
+            ['student', 'student@school.test', "Ghana Int'l Academy", 'active'],
+            ['parent', 'parent@school.test', "Ghana Int'l Academy", 'active'],
+            ['accountant', 'accountant@school.test', "Ghana Int'l Academy", 'active'],
+            ['admin (locked out)', 'admin@accrademo.test', 'Accra Demo School', 'pending'],
         ]);
     }
 }

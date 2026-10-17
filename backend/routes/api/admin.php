@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\V1\Admin\AuditLogController;
 use App\Http\Controllers\Api\V1\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'school.active'])->group(function () {
     Route::get('audit-logs', [AuditLogController::class, 'index']);
 
     Route::get('users', [UserController::class, 'index']);

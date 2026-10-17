@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\V1\Admin\TeacherAssignmentController;
 use App\Http\Controllers\Api\V1\Admin\TeacherController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'school.active'])->group(function () {
     Route::apiResource('teachers', TeacherController::class);
     Route::apiResource('students', StudentController::class);
     Route::post('students/{student}/provision-login', [StudentController::class, 'provisionLogin']);

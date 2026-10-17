@@ -51,7 +51,7 @@ export function AppShell() {
       {/* Desktop sidebar */}
       <aside className="hidden w-64 shrink-0 flex-col border-r border-slate-200 bg-white md:flex dark:border-slate-800 dark:bg-slate-900">
         <div className="border-b border-slate-200 px-4 py-4 dark:border-slate-800">
-          <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">Ghana Int&apos;l Academy</p>
+          <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{user.school?.name ?? 'Platform Admin'}</p>
           <p className="text-xs text-slate-500 dark:text-slate-400">School Management System</p>
         </div>
         {nav}
