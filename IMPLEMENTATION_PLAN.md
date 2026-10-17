@@ -62,15 +62,56 @@ one. Do not reintroduce schools/platform_admin without being asked again.
 ## Explicitly deferred (documented, not pretended)
 
 - Transportation management (bus/routes) — not implemented.
-- Real-time notifications (email/SMS/WhatsApp) — in-app `notifications`
-  table + model only; no delivery channel wired up.
 - Payment provider (Paystack/Hubtel) live integration — interface + manual
-  fallback only, no account credentials exist to test against.
-- CSV import/export — not implemented in MVP pass.
-- Announcements/calendar UI — backend model only if time allows; may not
-  get a frontend screen.
+  fallback only, by deliberate choice (see 2026-10-17 update below), no
+  account credentials exist to test against.
+- CSV import/export — students only (export + import with per-row error
+  reporting); not built for teachers, guardians, invoices, or anything else.
+- SMS/WhatsApp notifications — interface only
+  (`SmsGatewayInterface`/`WhatsAppGatewayInterface`), bound to stub
+  implementations that throw if called; no paid provider account exists.
+  Email notifications are real (see 2026-10-17 update).
 - Flutter app — not started; API is versioned (`/api/v1`) and documented
   so it can be consumed later.
+
+## Update 2026-10-17: password reset, CSV, email, tests, login redesign
+
+Added in the same session as the single-school decision above, after the
+owner explicitly chose manual-only payments ("this is actually... I want
+to use this to surprise my mama") and asked to continue with the rest of
+the originally-deferred list:
+
+- **Password reset** — `POST /forgot-password` + `/reset-password`, using
+  Laravel's built-in password broker, pointed at the SPA's own
+  `/reset-password` page. Verified live end-to-end with a real token from
+  the log-driver email, including a full login with the new password
+  afterward. Mail defaults to `MAIL_MAILER=log`; switches to real Gmail
+  SMTP by `.env` values alone once the owner provides an app password —
+  see README "Email setup".
+- **CSV import/export (students)** — verified live: export produces a
+  correct CSV, import creates valid rows and reports per-row errors
+  (duplicate admission number, missing required field) without failing
+  the whole batch.
+- **Email notifications** — publishing an announcement emails everyone in
+  its audience (role-based, creator excluded). Verified live against all
+  4 other seeded accounts in `storage/logs/laravel.log`.
+- **SMS/WhatsApp gateway stub** — `app/Services/Messaging/`, same
+  intentionally-unusable pattern as `PaymentGatewayInterface`, ready to
+  wire to a real provider later.
+- **Frontend automated tests** — Vitest + React Testing Library, 20 tests
+  across utils, PasswordInput, ThemeToggle, and LoginPage. Not exhaustive
+  (see README "Known limitations").
+- **Login page redesign** — two-panel layout with a placeholder
+  `SchoolLogo` component (swap for a real logo file with no other code
+  changes), reused on login/forgot-password/reset-password/app sidebar.
+
+One real, previously-unknown bug caught and fixed while testing the CSV
+export route live: any unauthenticated API request without an
+`Accept: application/json` header (e.g. a browser hitting an expired
+session on a plain download link) crashed with a 500 — Laravel's default
+guest-redirect tried to resolve a `login` web route that doesn't exist in
+this API-only app. Fixed via `redirectGuestsTo(fn () => null)` in
+`bootstrap/app.php`, verified with a clean 401 afterward.
 
 ## Status tracking
 
