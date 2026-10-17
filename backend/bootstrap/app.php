@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Middleware\EnsureSchoolActive;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -17,8 +16,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->statefulApi();
 
         $middleware->throttleApi();
-
-        $middleware->alias(['school.active' => EnsureSchoolActive::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

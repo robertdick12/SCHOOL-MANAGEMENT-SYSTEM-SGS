@@ -12,5 +12,4 @@ Route::prefix('v1')->group(function () {
     require __DIR__.'/api/announcements.php';
     require __DIR__.'/api/dashboard.php';
     require __DIR__.'/api/admin.php';
-    require __DIR__.'/api/platform.php';
 });

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Link, Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { useAuth } from '@/auth/AuthContext'
 import { Button } from '@/components/ui/Button'
 import { FormField, Input, PasswordInput } from '@/components/ui/Input'
@@ -72,13 +72,6 @@ export function LoginPage() {
             </Button>
           </div>
         </form>
-
-        <p className="mt-4 text-center text-sm text-slate-500 dark:text-slate-400">
-          New school?{' '}
-          <Link to="/register-school" className="font-medium text-brand-600 hover:underline dark:text-brand-400">
-            Register here
-          </Link>
-        </p>
       </div>
     </div>
   )

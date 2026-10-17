@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Models\School;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,17 +33,6 @@ class AuthController extends Controller
             ]);
         }
 
-        if ($user->school_id !== null && $user->school?->status !== School::STATUS_ACTIVE) {
-            Auth::logout();
-
-            throw ValidationException::withMessages([
-                'email' => [match ($user->school?->status) {
-                    School::STATUS_SUSPENDED => "Your school's subscription is not active. Contact support to renew access.",
-                    default => "Your school's registration is pending approval. We'll notify you once it's active.",
-                }],
-            ]);
-        }
-
         $request->session()->regenerate();
 
         return response()->json(['message' => 'Logged in.']);
@@ -62,7 +50,7 @@ class AuthController extends Controller
 
     public function me(Request $request): JsonResponse
     {
-        $user = $request->user()->loadMissing('school');
+        $user = $request->user();
 
         return response()->json([
             'id' => $user->id,
@@ -70,11 +58,6 @@ class AuthController extends Controller
             'email' => $user->email,
             'roles' => $user->getRoleNames()->values(),
             'permissions' => $user->getAllPermissions()->pluck('name')->values(),
-            'school' => $user->school ? [
-                'id' => $user->school->id,
-                'name' => $user->school->name,
-                'status' => $user->school->status,
-            ] : null,
         ]);
     }
 }
