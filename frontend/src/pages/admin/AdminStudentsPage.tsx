@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Link } from 'react-router-dom'
-import { studentsApi } from '@/api/people'
+import { studentsApi, type StudentImportResult } from '@/api/people'
 import { extractErrorMessage } from '@/api/client'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Button } from '@/components/ui/Button'
@@ -12,7 +12,7 @@ import { DataTable } from '@/components/ui/DataTable'
 import { Modal } from '@/components/ui/Modal'
 import { FormField, Input, Select } from '@/components/ui/Input'
 import { Badge } from '@/components/ui/Badge'
-import { formatDate } from '@/lib/utils'
+import { downloadBlob, formatDate } from '@/lib/utils'
 
 const schema = z.object({
   admission_number: z.string().min(1, 'Required'),
@@ -28,12 +28,43 @@ export function AdminStudentsPage() {
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState('')
   const [serverError, setServerError] = useState<string | null>(null)
+  const [actionError, setActionError] = useState<string | null>(null)
+  const [importResult, setImportResult] = useState<StudentImportResult | null>(null)
+  const [isExporting, setIsExporting] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const queryClient = useQueryClient()
 
   const { data, isLoading } = useQuery({
     queryKey: ['students', { search }],
     queryFn: () => studentsApi.list({ search: search || undefined }),
   })
+
+  const handleExport = async () => {
+    setIsExporting(true)
+    try {
+      const blob = await studentsApi.exportCsv()
+      downloadBlob(blob, 'students.csv')
+    } catch (error) {
+      setActionError(extractErrorMessage(error))
+    } finally {
+      setIsExporting(false)
+    }
+  }
+
+  const importMutation = useMutation({
+    mutationFn: (file: File) => studentsApi.importCsv(file),
+    onSuccess: (result) => {
+      setImportResult(result)
+      queryClient.invalidateQueries({ queryKey: ['students'] })
+    },
+    onError: (error) => setActionError(extractErrorMessage(error)),
+  })
+
+  const handleImportFileChosen = (file: File | undefined) => {
+    if (!file) return
+    setActionError(null)
+    importMutation.mutate(file)
+  }
 
   const {
     register,
@@ -65,8 +96,39 @@ export function AdminStudentsPage() {
       <PageHeader
         title="Students"
         description="All registered students"
-        action={<Button onClick={() => setOpen(true)}>Register student</Button>}
+        action={
+          <div className="flex flex-wrap gap-2">
+            <Button variant="secondary" size="sm" isLoading={isExporting} onClick={handleExport}>
+              Export CSV
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              isLoading={importMutation.isPending}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              Import CSV
+            </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".csv,text/csv"
+              className="hidden"
+              onChange={(e) => {
+                handleImportFileChosen(e.target.files?.[0])
+                e.target.value = ''
+              }}
+            />
+            <Button onClick={() => setOpen(true)}>Register student</Button>
+          </div>
+        }
       />
+
+      {actionError && (
+        <p className="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-500/10 dark:text-red-400">
+          {actionError}
+        </p>
+      )}
 
       <div className="mb-4 max-w-sm">
         <Input placeholder="Search by name or admission number…" value={search} onChange={(e) => setSearch(e.target.value)} />
@@ -139,6 +201,33 @@ export function AdminStudentsPage() {
             </Button>
           </div>
         </form>
+      </Modal>
+
+      <Modal open={importResult !== null} title="Import results" onClose={() => setImportResult(null)}>
+        {importResult && (
+          <div className="space-y-3 text-sm">
+            <p className="text-emerald-700 dark:text-emerald-400">
+              {importResult.created} student{importResult.created === 1 ? '' : 's'} imported successfully.
+            </p>
+            {importResult.errors.length > 0 && (
+              <div>
+                <p className="mb-2 font-medium text-slate-700 dark:text-slate-300">
+                  {importResult.errors.length} row{importResult.errors.length === 1 ? '' : 's'} skipped:
+                </p>
+                <ul className="max-h-60 space-y-1 overflow-y-auto rounded-md border border-slate-200 p-3 dark:border-slate-800">
+                  {importResult.errors.map((e) => (
+                    <li key={e.row} className="text-red-600 dark:text-red-400">
+                      Row {e.row}: {e.messages.join(' ')}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <div className="flex justify-end pt-2">
+              <Button onClick={() => setImportResult(null)}>Done</Button>
+            </div>
+          </div>
+        )}
       </Modal>
     </div>
   )

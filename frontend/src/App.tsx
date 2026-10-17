@@ -6,6 +6,8 @@ import { RequireAuth, RequireRole } from '@/auth/RouteGuards'
 import { AppShell } from '@/components/layout/AppShell'
 import { ROLE_HOME } from '@/components/layout/nav-config'
 import { LoginPage } from '@/pages/auth/LoginPage'
+import { ForgotPasswordPage } from '@/pages/auth/ForgotPasswordPage'
+import { ResetPasswordPage } from '@/pages/auth/ResetPasswordPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { UnauthorizedPage } from '@/pages/UnauthorizedPage'
 import { PageSpinner } from '@/components/ui/Spinner'
@@ -64,6 +66,8 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
       <Route element={<RequireAuth />}>

@@ -16,6 +16,17 @@ export const studentsApi = {
   update: (id: number, data: Partial<Student>) => api.put<Student>(`/students/${id}`, data).then((r) => r.data),
   provisionLogin: (id: number, email: string) =>
     api.post<{ temporary_password: string }>(`/students/${id}/provision-login`, { email }).then((r) => r.data),
+  exportCsv: () => api.get('/students/export', { responseType: 'blob' }).then((r) => r.data as Blob),
+  importCsv: (file: File) => {
+    const form = new FormData()
+    form.append('file', file)
+    return api.post<StudentImportResult>('/students/import', form).then((r) => r.data)
+  },
+}
+
+export interface StudentImportResult {
+  created: number
+  errors: { row: number; messages: string[] }[]
 }
 
 export const guardiansApi = {

@@ -16,6 +16,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->statefulApi();
 
         $middleware->throttleApi();
+
+        // This app is API-only — there is no "login" web route to redirect
+        // guests to. Without this, an unauthenticated request that doesn't
+        // send Accept: application/json (e.g. a plain browser navigation to
+        // a file-download URL with an expired session) crashes with a 500
+        // from Laravel's default guest-redirect trying to resolve a
+        // nonexistent route, instead of a clean 401.
+        $middleware->redirectGuestsTo(fn () => null);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

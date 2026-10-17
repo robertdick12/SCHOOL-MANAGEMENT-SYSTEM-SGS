@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('teachers', TeacherController::class);
+
+    Route::get('students/export', [StudentController::class, 'export']);
+    Route::post('students/import', [StudentController::class, 'import']);
     Route::apiResource('students', StudentController::class);
     Route::post('students/{student}/provision-login', [StudentController::class, 'provisionLogin']);
 

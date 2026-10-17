@@ -6,21 +6,52 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProvisionLoginRequest;
 use App\Http\Requests\StudentRequest;
 use App\Models\Student;
+use App\Services\StudentCsvService;
 use App\Services\UserProvisioningService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class StudentController extends Controller
 {
-    public function __construct(private readonly UserProvisioningService $provisioning)
-    {
+    public function __construct(
+        private readonly UserProvisioningService $provisioning,
+        private readonly StudentCsvService $csv,
+    ) {
     }
 
     public function index(Request $request): JsonResponse
     {
         $this->authorize('viewAny', Student::class);
 
-        $query = Student::query()->with(['user', 'enrolments.schoolClass']);
+        $query = $this->scopedQuery($request)->with(['user', 'enrolments.schoolClass']);
+
+        return response()->json(
+            $query->orderBy('last_name')->paginate($request->integer('per_page', 25))
+        );
+    }
+
+    public function export(Request $request): StreamedResponse
+    {
+        $this->authorize('viewAny', Student::class);
+
+        return $this->csv->export($this->scopedQuery($request));
+    }
+
+    public function import(Request $request): JsonResponse
+    {
+        $this->authorize('create', Student::class);
+
+        $request->validate(['file' => ['required', 'file', 'mimes:csv,txt']]);
+
+        $result = $this->csv->import($request->file('file')->getRealPath());
+
+        return response()->json($result);
+    }
+
+    private function scopedQuery(Request $request)
+    {
+        $query = Student::query();
 
         $user = $request->user();
         if ($user->hasRole('teacher')) {
@@ -43,9 +74,7 @@ class StudentController extends Controller
             });
         }
 
-        return response()->json(
-            $query->orderBy('last_name')->paginate($request->integer('per_page', 25))
-        );
+        return $query;
     }
 
     public function store(StudentRequest $request): JsonResponse

@@ -6,6 +6,7 @@ import type { Role } from '@/types/auth'
 import { cn, initials } from '@/lib/utils'
 import { Button } from '@/components/ui/Button'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { SchoolLogo } from '@/components/ui/SchoolLogo'
 
 function activeRoleFromPath(pathname: string, roles: [Role, ...Role[]]): Role {
   const match = roles.find((role) => pathname.startsWith(ROLE_HOME[role]))
@@ -50,9 +51,12 @@ export function AppShell() {
     <div className="flex h-screen overflow-hidden bg-slate-50 dark:bg-slate-950">
       {/* Desktop sidebar */}
       <aside className="hidden w-64 shrink-0 flex-col border-r border-slate-200 bg-white md:flex dark:border-slate-800 dark:bg-slate-900">
-        <div className="border-b border-slate-200 px-4 py-4 dark:border-slate-800">
-          <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">Sovereign Grace School</p>
-          <p className="text-xs text-slate-500 dark:text-slate-400">School Management System</p>
+        <div className="flex items-center gap-2 border-b border-slate-200 px-4 py-4 dark:border-slate-800">
+          <SchoolLogo className="h-8 w-8 shrink-0" />
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">Sovereign Grace School</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">School Management System</p>
+          </div>
         </div>
         {nav}
       </aside>
