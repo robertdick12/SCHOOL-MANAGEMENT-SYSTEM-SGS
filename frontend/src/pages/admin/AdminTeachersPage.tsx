@@ -99,8 +99,8 @@ export function AdminTeachersPage() {
           <FormField label="Staff number" htmlFor="staff_number" error={errors.staff_number?.message}>
             <Input id="staff_number" {...register('staff_number')} />
           </FormField>
-          <FormField label="Qualification" htmlFor="qualification" error={errors.qualification?.message}>
-            <Input id="qualification" {...register('qualification')} />
+          <FormField label="Qualification (optional)" htmlFor="qualification" error={errors.qualification?.message}>
+            <Input id="qualification" placeholder="e.g. B.Ed, or leave blank for a volunteer" {...register('qualification')} />
           </FormField>
           <FormField label="Hire date" htmlFor="hire_date" error={errors.hire_date?.message}>
             <Input id="hire_date" type="date" {...register('hire_date')} />
